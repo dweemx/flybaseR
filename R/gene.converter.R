@@ -119,6 +119,7 @@ GeneConverter <- function(x, version, verbose = F) {
   
   genes.recovered <- as.data.frame(conversion.table.filtered)$gene.symbol.target
   genes.not.recovered <- x[!(x %in% conversion.table.filtered$gene.symbol.source)]
+  n.genes.recovered <- length(x = genes.recovered)
   
   genes.not.recovered.final <- c()
   
@@ -131,7 +132,6 @@ GeneConverter <- function(x, version, verbose = F) {
       genes.not.recovered.final <- c(genes.not.recovered.final, i)
     } else {
       genes.recovered <- c(genes.recovered, i)
-      n.genes.recovered <- n.genes.recovered + 1
     }
   }
   
