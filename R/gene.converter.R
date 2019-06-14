@@ -84,11 +84,14 @@ GeneConverter <- function(x, version, verbose = F) {
   
   if(verbose) {
     message(paste0("[SOURCE] - Downloading fbgn_annotation_ID file from Flybase (version ", source.fb.release.version,").."))
-    source.fbgn.annotation.ID.table <- GetFlybaseAnnotation(version = source.fb.release.version)
-    
-    message(paste0("[TARGET] - Downloading fbgn_annotation_ID file from Flybase (version ", version,").."))
-    target.fbgn.annotation.ID.table <- GetFlybaseAnnotation(version = version)
   }
+  source.fbgn.annotation.ID.table <- GetFlybaseAnnotation(version = source.fb.release.version)
+  
+  if(verbose) {
+    message(paste0("[TARGET] - Downloading fbgn_annotation_ID file from Flybase (version ", version,").."))
+  }
+  target.fbgn.annotation.ID.table <- GetFlybaseAnnotation(version = version)
+
   #########################################
   # Create the conversion table
   #########################################
