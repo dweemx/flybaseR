@@ -16,9 +16,9 @@
 #' @keywords flybase
 #' @export
 #' @examples
-#' id.converter(x, symbols = T)
+#' id.converter(x, symbols = TRUE)
 #' id.converter(x, bundle.size = 50, polite.access = 10, convert.into = "transcripts")
-#' id.converter(x, symbols = T, bundle.size = 50, diehard.symbols = T)
+#' id.converter(x, symbols = TRUE, bundle.size = 50, diehard.symbols = TRUE)
 
 
 id.converter <- function(x, symbols, bundle.size, DmelOnly, polite.access, diehard.symbols, convert.into){
