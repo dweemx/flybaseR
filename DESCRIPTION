@@ -2,7 +2,10 @@ Package: flybaseR
 Title: Accessing FlyBase in R environment
 Version: 0.2.1
 Date: 2019-06-14
-Authors@R: person("Hangnoh", "Lee", email = "hangnoh.lee@gmail.com", role = c("aut", "cre")), person("Maxime", "De Waegeneer", email = "mdewaegeneer@gmail.com")
+Authors@R: c(
+  person("Hangnoh", "Lee", email = "hangnoh.lee@gmail.com", role = c("aut", "cre")), 
+  person("Maxime", "De Waegeneer", email = "mdewaegeneer@gmail.com")
+  )
 Authors: Hangnoh Lee [aut,cre], Maxime De Waegeneer
 Description: This package provides functions for FlyBase ID conversion tools and Jump2Gene pages.
 Depends: R (>= 3.3.2)
