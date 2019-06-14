@@ -1,23 +1,45 @@
-# to install
+# Install
 
 ```
-devtools::install_github('hangnoh/flybaseR')
+devtools::install_github('mase5/flybaseR')
 ```
 
+# Version History
 
-# id.converter
+June 14, 2019
+
+* Version 0.2.1
+    * Improve the algorithm to detect more gene symbols.
+* Version 0.2.0
+    * Add new feature to update gene symbols to any Flybase release version.
+
+# Features
+
+## GeneConverter (NEW)
+Converting Gene Symbols to a certain version Flybase version.
+
+### Description
+
+The function takes Gene Symbols as an input, and update the gene symbols to a given version of Flybase release (Post-genomes 2006) FB2017_03 for instance.
+
+### Usage
+```
+flybaseR::GeneConverter(x, version = "FB2017_03")
+```
+
+## id.converter
 Converting or Updating FlyBase IDs or Symbols
 
-Description
+### Description
 
 The function takes FlyBase IDs (e.g. FBgn0000003) or Gene symbols as an input, and converts it into updated IDs or symbols using the FlyBase ID converter (web). The function accesses FlyBase, so requires internet-connection. FlyBase ID inputs are bundled as 1,000. 100 for symbols. FlyBase IDs for genes that are split into multiple genes will be concatenated with two colons (::). Genes that does not have matching IDs will be shown as "unknown". Certain gene symbols would appear as "unknown" even if the gene exists, and have FlyBase IDs. This is because the ID converter in FlyBase website cannot convert the gene. For example, CG31976 cannot be converted by FlyBase, although you can find the gene from the gene report. Setting diehard.symbols = T will look for gene report pages of such unconvertible genes one by one. The process is essentially slow because it accesses FlyBase for each gene.
 
-Usage
+### Usage
 ```
 id.converter(x, symbols = F, bundle.size = 1000, DmelOnly = T, polite.access = 0, diehard.symbols = F, convert.into)
 ```
 
-Arguments
+### Arguments
 
 - x: *a vector.* FlyBase IDs or names to be converted.
 - symbols: *Logical.* If TRUE, the output will be gene symbols, rather than FlyBase IDs. Default = F
@@ -31,7 +53,7 @@ Arguments
   If missing, the IDs will be updated to the most recent IDs only.
 
 
-Examples
+### Examples
 ```
 id.converter(x, symbols = T)
 id.converter(x, bundle.size = 50, polite.access = 10, convert.into = "transcripts")
@@ -39,19 +61,19 @@ id.converter(x, symbols = T, bundle.size = 50, diehard.symbols = T)
 ```
 
 
-# id.converter2
+## id.converter2
 Updating FlyBase IDs to a certain version.
 
-Description
+### Description
 
 The function takes FlyBase IDs (e.g. FBgn0000003) as an input, and converts it into certain versions of IDs. This function is not able to handle gene symbols. The function accesses the FlyBase FTP site, so requires internet-connection. FlyBase IDs for genes that are split into multiple genes will be concatenated with two colons (::). Genes that does not have matching IDs will be shown as "unknown".
 
-Usage
+### Usage
 ```
 id.converter2(x, version, thread = 1)
 ```
 
-Arguments
+### Arguments
 
 - x: *a vector.* FlyBase IDs.
 - version: FlyBase ID version for the updated result. 
@@ -60,32 +82,32 @@ Arguments
   Default : thread = 1.
 
 
-Examples
+### Examples
 ```
 id.converter2(x, version=6.12)
 id.converter2(x, version="FB2016_04", thread=4)
 ```
 
 
-# j2g
+## j2g
 Open FlyBase gene reports using a web browser
 
-Description
+### Description
 
 The function takes FlyBase IDs (e.g. FBgn0000003) or Gene symbols as an input, and opens FlyBase gene report from the default web browser (e.g. Jump2Gene).
 
-Usage
+### Usage
 ```
 j2g(x, n = 10)
 ```
-Arguments
+### Arguments
 
 
 - x: *a character or vector.* FlyBase IDs or symbols.
 - n: The maximum number of genes to be opened. Default = 10.
 
 
-Examples
+### Examples
 ```
 j2g("e2f")
 j2g(c("ovo", "otu"))

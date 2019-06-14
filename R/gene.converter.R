@@ -1,6 +1,6 @@
 #'  Get Flybase annotation ID file given the version
 #'
-#' The function takes Flybase version as an input, and downlooad the the Flybase annotation ID file. 
+#' The function takes Flybase version as an input, and download the the Flybase annotation ID file. 
 #' Then if filter out non-melanogaster genes and copy information from annotation.ID to secondary.annotation.ID if latter is empty
 #' 
 #' The function accesses the FlyBase FTP site, so requires internet-connection.
@@ -82,35 +82,67 @@ GeneConverter <- function(x, version, verbose = F) {
   # Get the gene ID list file from FlyBase
   #########################################
   
+  
   if(verbose) {
     message(paste0("[SOURCE] - Downloading fbgn_annotation_ID file from Flybase (version ", source.fb.release.version,").."))
   }
   source.fbgn.annotation.ID.table <- GetFlybaseAnnotation(version = source.fb.release.version)
-  
   if(verbose) {
     message(paste0("[TARGET] - Downloading fbgn_annotation_ID file from Flybase (version ", version,").."))
   }
   target.fbgn.annotation.ID.table <- GetFlybaseAnnotation(version = version)
-
+  
+  # If we don't unlist, some genes are still escaping while they shouldn't (e.g.: Piezo)
+  # Therefore we will unlist the secondary annotation ID values for each row in the Flybase annotation ID table (both for source and target) 
+  # and then merge with the secondary annotation ID
+  source.fbgn.annotation.ID.table.ul <- do.call(what = "rbind", args = apply(X = source.fbgn.annotation.ID.table, MARGIN = 1, FUN = function(row) {
+    row <- as.data.frame(x = t(x = row), stringsAsFactors = F)
+    return (data.frame(row[, -c(ncol(x = row))], secondary.annotation.ID=unlist(strsplit(as.character(row[["secondary.annotation.ID"]]),",")), row.names = NULL, stringsAsFactors = F))
+  }))
+  target.fbgn.annotation.ID.table.ul <- do.call(what = "rbind", args = apply(X = target.fbgn.annotation.ID.table, MARGIN = 1, FUN = function(row) {
+    row <- as.data.frame(x = t(x = row), stringsAsFactors = F)
+    return (data.frame(row[, -c(ncol(x = row))], secondary.annotation.ID=unlist(strsplit(as.character(row[["secondary.annotation.ID"]]),",")), row.names = NULL, stringsAsFactors = F))
+  }))
+  
   #########################################
   # Create the conversion table
   #########################################
-  conversion.table <- merge(x = source.fbgn.annotation.ID.table
-                            , y = target.fbgn.annotation.ID.table
+  conversion.table <- merge(x = source.fbgn.annotation.ID.table.ul
+                            , y = target.fbgn.annotation.ID.table.ul
                             , by = "secondary.annotation.ID"
                             , suffixes = c(".source", ".target"))
   gene.signature.mask <- conversion.table$gene.symbol.source %in% x
+  
   conversion.table.filtered <- conversion.table %>% 
-    filter(gene.signature.mask) %>% 
-    filter(annotation.ID.source == annotation.ID.target)
+    filter(gene.signature.mask) %>%
+    filter(!duplicated(gene.symbol.source))
   
   genes.recovered <- as.data.frame(conversion.table.filtered)$gene.symbol.target
   genes.not.recovered <- x[!(x %in% conversion.table.filtered$gene.symbol.source)]
   
-  n.genes.recovered <- nrow(conversion.table.filtered)
+  genes.not.recovered.final <- c()
+  
+  message("Genes that were not recovered: \n")
+  # Further investigate the genes not recovered
+  for(i in genes.not.recovered) {
+    source.annotation.ID <- source.fbgn.annotation.ID.table$annotation.ID[source.fbgn.annotation.ID.table$gene.symbol==i]
+    target.annotation.ID <- target.fbgn.annotation.ID.table$annotation.ID[target.fbgn.annotation.ID.table$gene.symbol==i]
+    if(length(x = target.annotation.ID) == 0) {
+      genes.not.recovered.final <- c(genes.not.recovered.final, i)
+    } else {
+      genes.recovered <- c(genes.recovered, i)
+      n.genes.recovered <- n.genes.recovered + 1
+    }
+  }
+  
+  n.genes.recovered <- length(x = genes.recovered)
   n.genes.not.recovered <- length(x = x) - n.genes.recovered
   percent.genes.recovered <- n.genes.recovered/length(x = x)*100
   
-  message(paste0("Total number of genes recovered: ", n.genes.recovered, " (", percent.genes.recovered, "). \nGenes that were not recovered (", n.genes.not.recovered,"): \n", paste(genes.not.recovered, collapse = "\n")))
+  message(paste0("Total number of genes recovered: ", n.genes.recovered, " (", round(x = percent.genes.recovered, digits = 2), "). \nTotal genes that were not recovered (", n.genes.not.recovered,"): \n"))
+  for(i in genes.not.recovered.final) {
+    message(paste0(i, " (possibly withdrawn)"))
+  }
+  
   return (genes.recovered)
 }
