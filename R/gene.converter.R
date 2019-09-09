@@ -58,7 +58,7 @@ GeneConverter <- function(x, version, verbose = F) {
   
   # Download the conversion table
   library(readr)
-  all.conversion.tables <- read_tsv(file = "https://raw.github.com/mase5/flybaseR/master/data/20190604_flybase_all_releases_conversion_table.tsv.gz"
+  all.conversion.tables <- read_tsv(file = "https://raw.github.com/dweemx/flybaseR/master/data/20190604_flybase_all_releases_conversion_table.tsv.gz"
                                     , col_names = T
                                     , quote = ''
                                     , progress = verbose)
