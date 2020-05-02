@@ -1,10 +1,15 @@
 # Install
 
 ```
-devtools::install_github('mase5/flybaseR')
+devtools::install_github('dweemx/flybaseR')
 ```
 
 # Version History
+
+May 02, 2020
+
+* Version 0.3.0
+    * Add mapping file until FB2020_02
 
 June 14, 2019
 

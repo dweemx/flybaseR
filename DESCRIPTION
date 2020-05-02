@@ -1,6 +1,6 @@
 Package: flybaseR
 Title: Accessing FlyBase in R environment
-Version: 0.2.1
+Version: 0.3.0
 Date: 2019-06-14
 Authors@R: c(
   person("Hangnoh", "Lee", email = "hangnoh.lee@gmail.com", role = c("aut", "cre")), 
